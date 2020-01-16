@@ -1,0 +1,48 @@
+<div class="container-fluid" id="holder" #holder>
+
+  <div class="fileupload">
+    <form [formGroup]="fileUploadForm">
+      <div class=" form-group ">
+        <span><a href="" (click)="openFileOption()" style="text-decoration: underline;">Browse</a> or Drop your files
+          here. </span>
+        <input type="file" #fileId formControlName="fileUploadName" (change)="handleFilePreview($event.target.files)"
+          multiple class="form-control ">
+      </div>
+    </form>
+  </div>
+
+
+  <div class="upld-btn">
+    <!-- <button class="btn btn-success" (click)="clearQueue()">Clear Queue</button> -->
+    <button type="submit" class="btn btn-success" (click)="uploadFiles()"
+      [disabled]="disableUpload">{{configData.uploadBtnLabel}}</button>
+  </div>
+  <div class="preview_area">
+    <div class="upload_items" *ngFor="let file of imagePreviewArray; let i = index">
+      <div class="item-block">
+        <img [src]="file.image" class="img-fluid" alt="img">
+      </div>
+      <div class="item-detail">
+        <div class="float-left ">
+          <h4>{{file.name}}</h4>
+          <p>{{file.type}}</p>
+          <p>{{file.size}}</p>
+          <div class="success" *ngIf="file.file_status === 'completed'">{{configData.uploadSuccessMsg}}</div>
+          <div *ngIf="file.file_status === 'failed'" class="error">{{configData.uploadFailureMsg}}</div>
+        </div>
+      </div>
+      <div class="progress-status">
+        <p>{{file.uploadProgress}} %</p>
+      </div>
+      <div class="action" *ngIf="(file.file_status !== 'processing')">
+        <img [src]="remove_image" class="img-fluid" data-toggle="tooltip" [title]="removePlaceHolder" alt="remove"
+          (click)="removeFile(i, file.uploadProgress)">
+      </div>
+      <div class="progress" *ngIf="!(file.file_status === 'pending' || file.file_status === 'completed')">
+        <!-- progress-bar-striped progress-bar-animated -->
+        <div class="progress-bar" role="progressbar" [style.width]="file.uploadProgress+ '%'" aria-valuenow="25"
+          aria-valuemin="0 " aria-valuemax="100 "></div>
+      </div>
+    </div>
+  </div>
+</div>

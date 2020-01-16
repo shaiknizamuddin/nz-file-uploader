@@ -1,0 +1,120 @@
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+@import '../../node_modules/material-icons/iconfont/material-icons.scss';
+@import '../../node_modules//font-awesome/scss/font-awesome.scss';
+
+
+// @import 'material-icons/iconfont/material-icons.scss';
+
+#holder.hover {
+  border: dashed 2px red !important;
+  background-color: rgb(211, 234, 248);
+}
+
+.progress {
+    display: flex;
+    height: 4px;
+    float: left;
+    overflow: hidden;
+    width: 50%;
+    font-size: .75rem;
+    background-color: #e9ecef;
+    border-radius: .25rem;
+    margin-bottom: 5px;
+  }
+  .fileupload {
+      width: 40%;
+      margin: 5% auto;
+      padding: 4%;
+      text-align: center;
+      border: dashed 2px #94c4d1;
+  }
+  .fileupload label {
+    font-size: 20px;
+    color: #333;
+    font-weight: 300;
+  }
+  .fileupload .form-control {
+    border: none;
+  }
+  input[type=file] {
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  /* file upload */
+  .upload_items {
+    width: 100%;
+    float: left;
+    border-bottom: 1px solid #e9ecef;
+  }
+  .upload_items .item-block {
+    width: 8%;
+    float: left;
+    border-left: 0px;
+    border-right: 0px;
+    background-color: #fff;
+    padding: 4px;
+    margin: 2px;
+  }
+  .upload_items .item-detail {
+    width: 60%;
+    padding-left: 3%;
+    float: left;
+    margin-top: 2px;
+  }
+  .upload_items .item-detail h4 {
+    font-weight: 300;
+    color: #606c7f;
+    font-size: 14px;
+    margin-top: 1%;
+  }
+  .upload_items .item-detail p {
+    font-weight: 300;
+    color: #ccc;
+    font-size: 10px;
+    padding: 0;
+    margin: 0;
+  }
+  .upload_items .progress-status {
+    width: 10%;
+    float: left;
+    margin-top: 3%;
+  }
+  .success {
+    width: 100%;
+    float: left;
+    color: #4c88fd;
+  }
+  .error {
+    width: 100%;
+    float: left;
+    color: #FF6565;
+  }
+  .upload_items .action {
+    width: 3%;
+    cursor: pointer;
+    float: right;
+    text-align: center;
+    color: #ccc;
+    margin-right: 2%;
+    margin-top: 3%;
+  }
+  .selected_items .action .fa {
+    margin: 0 10px;
+    float: right;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .upld-btn {
+    float: right;
+  }
+
+  .ok{
+    font-size: 24px;
+    color: #4c88fd;
+  }
+  

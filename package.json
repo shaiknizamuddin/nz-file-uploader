@@ -1,0 +1,22 @@
+{
+  "name": "nz-file-uploader",
+  "version": "1.4.11",
+  "author": "Nizamuddin shaik <nizamuddin407.shaik@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nizam9/nz-file-uploader.git"
+  },
+  "keywords": [
+    "ng2","ngx","ng-fileupload","ng2 fileupload",
+    "angular","angular7","typescript","angular fileupload",
+    "fileupload" , "uploads" , "files"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^8.2.14",
+    "@angular/core": "^8.2.14"
+  },
+  "dependencies": {
+    "bootstrap": "^4.4.1"
+  }
+}
