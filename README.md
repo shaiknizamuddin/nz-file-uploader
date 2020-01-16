@@ -72,5 +72,5 @@ This package handels the angular UI to upload files to server using your own bac
 
 ## License
 
-Mit License:  [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php)
+Mit License:  [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php) 
  
