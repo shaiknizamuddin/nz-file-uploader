@@ -18,14 +18,14 @@ export class FileUploadComponent implements OnInit {
   public showProgress = false;
   public fileToUpload;
   public finalFilesToPush;
-  // public uploadApi = 'http://localhost:8888/api/';  // `YOUR-API-HERE`
   public uploadApi;
   public configData: any;
   public remove_image = require('../assets/remove.png')
+  public showError: boolean = false;
+  public removePlaceHolder: any;
+
   @ViewChild('holder', { static: true }) el: ElementRef;
   @ViewChild('fileId', { static: true }) fileId: ElementRef;
-  showError: boolean = false;
-  removePlaceHolder: any;
 
   constructor(
     public fb: FormBuilder,
@@ -39,7 +39,6 @@ export class FileUploadComponent implements OnInit {
 
     this.uploadApi = this.configData.API;
     this.removePlaceHolder = this.configData.removePlaceHolder;
-    console.log(this.configData, '888888888888888888888888');
 
     this.fileUploadForm = this.fb.group({
       fileUploadName: ['']
@@ -50,7 +49,6 @@ export class FileUploadComponent implements OnInit {
       return false;
     };
     this.el.nativeElement.ondragend = () => {
-      console.log('on drag endddd');
       this.el.nativeElement.className = '';
       return false;
     };
@@ -65,16 +63,11 @@ export class FileUploadComponent implements OnInit {
     }
   }
 
-  closeAlert() {
-    this.showError = false;
-  }
-
   openFileOption() {
     this.fileId.nativeElement.click();
   }
 
   handleFilePreview(files) {
-    // console.log(files);
     const file_types = this.configData.fileTypes; //['image/jpeg', 'image/jpg', 'image/gif', 'image/png'];
 
     for (let i = 0; i < files.length; i++) {
@@ -206,7 +199,6 @@ export class FileUploadComponent implements OnInit {
           try {
             if (this.imagePreviewArray[this.active_index].file_status === 'failed') {
               this.imagePreviewArray[this.active_index].image = require('../assets/file_error.png');
-              console.log('removed the file from queue...');
               subs.unsubscribe();
               console.log('unsubscribing___________________');
               throw new Error();
@@ -232,7 +224,6 @@ export class FileUploadComponent implements OnInit {
           }, 500)
         }
       }, (error) => {
-        console.log('error in catch', error);
         this.disableUpload = false;
         alert('Please check your file upload service');
       });
