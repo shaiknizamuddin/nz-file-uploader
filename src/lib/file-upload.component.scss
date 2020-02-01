@@ -1,24 +1,69 @@
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
 
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,500,700&display=swap');
+body,
+html {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  float: left;
+  height: 100%;
+  overflow: hidden;
+  /* font-family: Muli, sans-serif; */
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff;
+
+}
+
+.scroll-div {
+  width: 100%;
+  height: 400px;
+  float: left;
+  overflow-y: auto;
+}
+
+
+section.fileupload-section{
+  width: 100%;
+  height: 100vh;
+  padding: 0% 0;
+  float: left;
+  // background: #fff;
+}
+.btn-primary{
+  background: #4682FC;
+}
 #holder.hover {
   border: dashed 2px red !important;
   background-color: rgb(211, 234, 248);
 }
-
+.upload-section{
+  width: 100%;
+  height: 100%; //calc(100vh - 200px);
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+}
+.icon{
+  width: 200px;
+  float: left;
+}
 .progress {
     display: flex;
     height: 4px;
     float: left;
     overflow: hidden;
-    width: 50%;
+    width: 100%;
     font-size: .75rem;
     background-color: #e9ecef;
     border-radius: .25rem;
     margin-bottom: 5px;
   }
   .fileupload {
-      width: 40%;
-      margin: 5% auto;
+      width: 90%;
+      margin: 0 auto;
       padding: 4%;
       text-align: center;
       border: dashed 2px #94c4d1;
@@ -40,10 +85,43 @@
     opacity: 0;
     cursor: pointer;
   }
-  /* file upload */
-  .upload_items {
+  .text-area{
     width: 100%;
     float: left;
+  }
+  .text-area h1{
+    font-weight: 500;
+    font-size: 18px;
+    color: #707070;
+  }
+  .text-area h2{
+    font-weight: 400;
+    font-size: 14px;
+    color: #707070;
+  }
+  .text-area h3{
+    font-weight: 300;
+    font-size: 12px;
+    color: #CCCDD1;
+
+  }
+  /* file upload */
+  .preview_area{
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-left: 1px solid #ddd;
+  }
+  .preview_area h1{
+    padding: 20px;
+    font-weight: 500;
+    font-size: 20px;
+    color: #707070;
+  }
+  .upload_items {
+    width: 98%;
+    float: right;
+    margin-left: 2%;
     border-bottom: 1px solid #e9ecef;
   }
   .upload_items .item-block {
@@ -64,15 +142,18 @@
   .upload_items .item-detail h4 {
     font-weight: 300;
     color: #606c7f;
-    font-size: 14px;
+    font-size: 16px;
     margin-top: 1%;
+    // float: left;
+    margin-right: 10px;
   }
   .upload_items .item-detail p {
     font-weight: 300;
     color: #ccc;
-    font-size: 10px;
+    font-size: 12px;
     padding: 0;
-    margin: 0;
+    margin: 0 10px 0 0;
+    float: left;
   }
   .upload_items .progress-status {
     width: 10%;
@@ -82,12 +163,16 @@
   .success {
     width: 100%;
     float: left;
-    color: #4c88fd;
+    font-size: 12px;
+    font-weight: 300;
+    color: #53B914;
   }
   .error {
     width: 100%;
     float: left;
     color: #FF6565;
+    font-size: 12px;
+    font-weight: 300;
   }
   .upload_items .action {
     width: 3%;
@@ -105,9 +190,15 @@
     cursor: pointer;
   }
   .upld-btn {
-    float: right;
+    width: 100%;
+    float: left;
+    // position: absolute;
+    // bottom: 0;
+    padding: 15px;
   }
-
+  .upld-btn .btn{
+    margin-right: 15px;
+  }
   .ok{
     font-size: 24px;
     color: #4c88fd;

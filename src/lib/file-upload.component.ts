@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpRequest, HttpClient, HttpEvent, HttpEventType, HttpResponse } from '@angular/common/http';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { HttpRequest, HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 import { FileUploadService } from './file-upload.service';
 
 
@@ -13,14 +13,15 @@ export class FileUploadComponent implements OnInit {
   public fileUploadForm: FormGroup;
   public active_index = 0;
   public fileUploadProgress = 0;
-  public imagePreviewArray = [];
+  public filePreviewArray = [];
   public disableUpload = true;
   public showProgress = false;
   public fileToUpload;
   public finalFilesToPush;
   public uploadApi;
   public configData: any;
-  public remove_image = require('../assets/remove.png')
+  public remove_image = require('../assets/remove-circle.svg');
+  public retry_image = require('../assets/sync-alt.svg');
   public showError: boolean = false;
   public removePlaceHolder: any;
 
@@ -59,7 +60,7 @@ export class FileUploadComponent implements OnInit {
     this.el.nativeElement.ondrop = (e) => {
       this.el.nativeElement.className = '';
       e.preventDefault();
-      this.handleFilePreview(e.dataTransfer.files);
+      this.filePreviewHandler(e.dataTransfer.files);
     }
   }
 
@@ -67,7 +68,7 @@ export class FileUploadComponent implements OnInit {
     this.fileId.nativeElement.click();
   }
 
-  handleFilePreview(files) {
+  filePreviewHandler(files) {
     const file_types = this.configData.fileTypes; //['image/jpeg', 'image/jpg', 'image/gif', 'image/png'];
 
     for (let i = 0; i < files.length; i++) {
@@ -88,25 +89,25 @@ export class FileUploadComponent implements OnInit {
           type: files[i].type,
           image: require('../assets/file.png'),
           file: files[i],
-          remove_icon: 'fa fa-trash',
           uploadProgress: 0,
-          file_status: 'pending' // processing , failed , completed
+          visited: 0,
+          file_status: 'pending' // processing , failed , completed , unknown
         };
-        if (this.imagePreviewArray.length > 0) {
+        if (this.filePreviewArray.length > 0) {
           // check if the same file is being added again
-          for (let k = 0; k < this.imagePreviewArray.length; k++) {
+          for (let k = 0; k < this.filePreviewArray.length; k++) {
             if (
-              this.imagePreviewArray[k].name === finalGroupedFileData.name &&
-              this.imagePreviewArray[k].size === finalGroupedFileData.size &&
-              this.imagePreviewArray[k].type === finalGroupedFileData.type
+              this.filePreviewArray[k].name === finalGroupedFileData.name &&
+              this.filePreviewArray[k].size === finalGroupedFileData.size &&
+              this.filePreviewArray[k].type === finalGroupedFileData.type
             ) {
               alert('File already exist');
               return false;
             }
           }
         }
-        this.imagePreviewArray.push(finalGroupedFileData);
-        const currentProgressIndex = this.imagePreviewArray.findIndex(x => x.file_status === 'processing');
+        this.filePreviewArray.push(finalGroupedFileData);
+        const currentProgressIndex = this.filePreviewArray.findIndex(x => x.file_status === 'processing');
         // check if any file uploding is already in progress , then keep it disable
         if (currentProgressIndex > -1) {
           this.disableUpload = true;
@@ -123,33 +124,35 @@ export class FileUploadComponent implements OnInit {
 
   clearQueue() {
     // TO-DO
-    // if (this.imagePreviewArray.length > 0) {
-    //   for (let i = 0; i < this.imagePreviewArray.length; i++) {
-    //     if(this.imagePreviewArray[i].file_status === 'pending') {
+    // if (this.filePreviewArray.length > 0) {
+    //   for (let i = 0; i < this.filePreviewArray.length; i++) {
+    //     if(this.filePreviewArray[i].file_status === 'pending') {
     //     }
     //   }
     // }
-    // this.imagePreviewArray = [];
+    // this.filePreviewArray = [];
   }
 
   removeFile(index, isProgress) {
     if (isProgress > 0 && isProgress !== 100) {
-      this.imagePreviewArray[index].file_status = `failed`;
-      if (this.imagePreviewArray.length === 0) {
+      this.filePreviewArray[index].file_status = `failed`;
+      if (this.filePreviewArray.length === 0) {
+      } else {
+        this.filePreviewArray.splice(index, 1);
       }
     } else {
-      this.imagePreviewArray.splice(index, 1);
+      this.filePreviewArray.splice(index, 1);
 
-      if (this.imagePreviewArray.length > 0) {
+      if (this.filePreviewArray.length > 0) {
         // get the index of current in progress file and assign that index to file count
-        const currentProgressIndex = this.imagePreviewArray.findIndex(x => x.file_status === 'processing');
+        const currentProgressIndex = this.filePreviewArray.findIndex(x => x.file_status === 'processing');
         if (currentProgressIndex > -1) {
           this.active_index = currentProgressIndex;
           this.disableUpload = true;
         }
         this.active_index = (this.active_index > 0) ? this.active_index-- : 0;
       }
-      if (this.imagePreviewArray.length === 0) {
+      if (this.filePreviewArray.length === 0) {
         this.disableUpload = true;
       }
 
@@ -163,18 +166,29 @@ export class FileUploadComponent implements OnInit {
     return Math.round(bytes / Math.pow(1024, i)) + ' ' + sizes[i];
   };
 
-  uploadFiles() {
-    if (this.imagePreviewArray.length > 0) {
+  uploadFiles(pointer?, type?) {
+    if (this.filePreviewArray.length > 0) {
 
       this.showProgress = true; // show progress
       this.disableUpload = true;
 
-      const currentProgressIndex = this.imagePreviewArray.findIndex(x => x.file_status === 'pending');
-      if (currentProgressIndex > -1) {
-        this.active_index = currentProgressIndex;
+
+
+      if (type === 'single_uploads') {
+        this.active_index = pointer;
+      } else {
+        const currentProgressIndex = this.filePreviewArray.findIndex(x => x.file_status === 'pending');
+        if (currentProgressIndex > -1) {
+          this.active_index = currentProgressIndex;
+        } else {
+          const CPI = this.filePreviewArray.findIndex(x => x.file_status === 'unknown');
+          if (CPI > -1) {
+            this.active_index = CPI;
+          }
+        }
       }
 
-      const fileToUpload = this.imagePreviewArray;
+      const fileToUpload = this.filePreviewArray;
       const formData: FormData = new FormData();
 
       formData.append('files', fileToUpload[this.active_index].file, fileToUpload[this.active_index].file.name);
@@ -185,62 +199,95 @@ export class FileUploadComponent implements OnInit {
         reportProgress: true,
       });
       const subs = this._httpClient.request(req).subscribe((event) => {
+        // console.log(event, 'eventevent');
         if (event.type === HttpEventType.UploadProgress) {
           this.fileUploadProgress = Math.round(100 * event.loaded / event.total);
-          this.imagePreviewArray[this.active_index].uploadProgress = this.fileUploadProgress;
+          this.filePreviewArray[this.active_index].uploadProgress = this.fileUploadProgress;
 
-          this.imagePreviewArray[this.active_index].file_status =
-            (this.imagePreviewArray[this.active_index].file_status !== 'failed') ? `processing` : 'failed';
+          this.filePreviewArray[this.active_index].file_status =
+            (this.filePreviewArray[this.active_index].file_status !== 'failed') ? `processing` : 'failed';
 
-          this.imagePreviewArray[this.active_index].image =
-            (this.imagePreviewArray[this.active_index].file_status !== 'failed') ? require('../assets/file.png') : require('../assets/file_error.png');
+          this.filePreviewArray[this.active_index].image =
+            (this.filePreviewArray[this.active_index].file_status !== 'failed') ? require('../assets/file.png') : require('../assets/file_error.png');
 
           // Check if the status of the file is failed , if so : unsubscribe the request and allow another request
           try {
-            if (this.imagePreviewArray[this.active_index].file_status === 'failed') {
-              this.imagePreviewArray[this.active_index].image = require('../assets/file_error.png');
+            if (this.filePreviewArray[this.active_index].file_status === 'failed') {
+              this.filePreviewArray[this.active_index].image = require('../assets/file_error.png');
               subs.unsubscribe();
               console.log('unsubscribing___________________');
               throw new Error();
             }
           } catch (e) {
             subs.unsubscribe();
-            this.imagePreviewArray.map((eFile, i) => {
+            this.filePreviewArray.map((eFile, i) => {
               if (eFile.file_status === 'pending') {
                 this.recursiveFileCall();
               }
             });
           }
           setTimeout(() => {
-            this.imagePreviewArray[this.active_index].file_status = (this.fileUploadProgress === 100) ? `completed` : `processing`;
-            this.imagePreviewArray[this.active_index].image = (this.fileUploadProgress === 100) ? require('../assets/file_success.png') : require('../assets/file.png');
+            this.filePreviewArray[this.active_index].file_status = (this.fileUploadProgress === 100) ? `completed` : `processing`;
+            this.filePreviewArray[this.active_index].image = (this.fileUploadProgress === 100) ? require('../assets/file_success.png') : require('../assets/file.png');
           }, 500);
 
         } else if (event instanceof HttpResponse) {
           setTimeout(() => {
-            this.imagePreviewArray[this.active_index].file_status = `completed`;
-            this.imagePreviewArray[this.active_index].image = require('../assets/file_success.png');
+            this.filePreviewArray[this.active_index].file_status = `completed`;
+            this.filePreviewArray[this.active_index].image = require('../assets/file_success.png');
             this.recursiveFileCall();
           }, 500)
         }
       }, (error) => {
         this.disableUpload = false;
-        alert('Please check your file upload service');
+        setTimeout(() => {
+          this.filePreviewArray[this.active_index].file_status = `unknown`;
+          this.filePreviewArray[this.active_index].image = require('../assets/file_error.png');
+
+          const checkIfAllFilesFailed = this.filePreviewArray.every((x) => x.status === 'unknown');
+
+          /**
+           * when single upload comes into picture , the visited values of the field will always be 1; , so it will never call recersively()'
+           * 1. what if 2 success and then unknown
+           * 2. all status is unknown
+           * 3. 2 status unknown and remaining success
+           * 4. middle unknown and ramaining success
+           */
+
+          if ((type !== 'single_uploads' && checkIfAllFilesFailed) || this.filePreviewArray[this.active_index].visited === 0) {
+            this.recursiveFileCall();
+          }
+        }, 500);
+
+
+
+        // alert('Please check your file upload service');
       });
     } else {
       this.disableUpload = true;
     }
   }
 
+  retryFailedUploads(index, uploadProgress , status) {
+    const currentProgressIndex = this.filePreviewArray.findIndex(x => x.file_status === 'processing');
+    if(currentProgressIndex > -1) { // some file is uploading
+      alert('please wait , till the current file is uploaded and then try again')
+    } else {
+      this.uploadFiles(index, 'single_uploads');
+    }
+
+  }
+
 
   recursiveFileCall() {
-    if (this.imagePreviewArray.length !== this.active_index + 1) {
+    if (this.filePreviewArray.length !== this.active_index + 1) {
+      this.filePreviewArray[this.active_index].visited = 1;
       this.active_index++;
       this.uploadFiles();
     } else {
       console.log('upload complete . . .');
       this.fileUploadForm.reset();
-      // this.imagePreviewArray = [];
+      // this.filePreviewArray = [];
     }
   }
 
