@@ -1,4 +1,5 @@
 # Angular FileUploader
+ This is an Angular plugin that supports uploading files to server as a `multipart/form-data` 
 
 ## Features
 
@@ -63,13 +64,13 @@ Following are the options and its defaults values
 ### Description :
 
 This package handels the angular UI to upload files to server using your own backend api. Just provide your api URL in the configuration in imports.
-> `Supports formData and multipart uploads`
+> Don't forget to handel the uploads in `"multipart/form-data"`  in your backend service.
 
 ## Credits
 **Author && Developer** : [Nizamuddin shaik](mailto:nizamuddin407.shaik@gmail.com)
 
-**Designer** : Special thanks to [Jaseem.p]() for the nice design
+**Designer** : [Jaseem.p](https://dribbble.com/jaseemp)
 
 ## License
 
-Mit License:  [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php)  
+Mit License:  [http://www.opensource.org/licenses/mit-license.php](http://www.opensource.org/licenses/mit-license.php)
